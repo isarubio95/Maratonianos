@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Representa a un corredor de una maratón. Permite 
@@ -34,26 +36,96 @@ public class Corredor {
 		
 		/**
 	     * Establece el nombre del corredor basado en la entrada del usuario.
+	     * Incluye un regex para comprobar la validez del nombre insertado.
 	     */
 		public void setNombre() { 
-			System.out.println("Introducza el nombre del maratoniano: ");
-			this.nombre = entrada.nextLine();	
+			System.out.println("Introducza el nombre del maratoniano: ");			
+			boolean invalido = true;
+			while(invalido) {
+				try {										
+					String nombre = entrada.nextLine(); 
+					// Permitimos el uso de "ñ" y tildes, obligamos a que la primera letra sea mayúscula
+					Pattern mascara = Pattern.compile("^[A-ZÑÁÉÍÓÚ][a-zñáéíóú]+$"); 
+					Matcher comprobador = mascara.matcher(nombre);
+					
+					if(comprobador.find()) { // Condicional que comprueba la validez del regex
+						this.nombre = nombre;
+						invalido = false; // Salimos del bucle una vez se escriba el nombre correctamente
+					}
+					else { // Mensaje de error y final del bucle
+						System.out.println("Formato incorrecto. (La primera letra debe ser mayúscula)");
+					}
+						
+				}
+				catch(InputMismatchException e) { 
+				// Capturamos el error lanzado por el programa, en caso de que se introduzca un tipo de dato distinto			
+					System.out.println("Introducza el nombre del maratoniano: ");
+					entrada.next(); // Limpiamos el búffer de la entrada para que no lo siga leyendo en el siguiente bucle
+				}
+			}
+			
 		}
 		
 		/**
 	     * Establece el dorsal del corredor basado en la entrada del usuario.
+	     * Incluye un regex para comprobar la validez del dorsal insertado.
 	     */
 		public void setDorsal() {			
-			System.out.println("Introducza dorsal: ");
-			this.dorsal = entrada.nextInt();	
+			System.out.println("Introducza dorsal: ");		
+			boolean invalido = true;
+			while(invalido) {
+				try {										
+					String dorsalTexto = entrada.nextLine(); 
+					// Permitimos el uso de "ñ" y tildes, obligamos a que la primera letra sea mayúscula
+					Pattern mascara = Pattern.compile("^(?:100|[1-9][0-9]?)$"); 
+					Matcher comprobador = mascara.matcher(dorsalTexto);
+					
+					if(comprobador.find()) { // Condicional que comprueba la validez del regex
+						int dorsal = Integer.parseInt(dorsalTexto);
+						this.dorsal = dorsal;
+						invalido = false; // Salimos del bucle una vez se escriba el nombre correctamente
+					}
+					else { // Mensaje de error y final del bucle
+						System.out.println("Formato incorrecto. (Introduza un número del 1 al 100)");
+					}					
+				}
+				catch(InputMismatchException e) { 
+				// Capturamos el error lanzado por el programa, en caso de que se introduzca un tipo de dato distinto			
+					System.out.println("Introducza el nombre del maratoniano: ");
+					entrada.next(); // Limpiamos el búffer de la entrada para que no lo siga leyendo en el siguiente bucle
+				}
+			}			
 		}
 		
 		/**
 	     * Establece el tiempo en segundos del corredor basado en la entrada del usuario.
+	     * Se añade un regex para comprobar la validez del tiempo insertado.
 	     */
 		public void setSegundos() {		
-			System.out.println("Introducza los segundos: ");
-			this.segundos = entrada.nextDouble();	
+			System.out.println("Introducza los segundos (número decimal del 10.00 al 99.99: ");
+			boolean invalido = true;
+			while(invalido) {
+				try {										
+					String segundosTexto = entrada.nextLine(); 
+					// Permitimos el uso de "ñ" y tildes, obligamos a que la primera letra sea mayúscula
+					Pattern mascara = Pattern.compile("^(?:9[0-9]|(?:1[0-9]|[2-9][0-9]))\\.[0-9]{2}$"); 
+					Matcher comprobador = mascara.matcher(segundosTexto);
+					
+					if(comprobador.find()) { // Condicional que comprueba la validez del regex
+						double segundos = Double.parseDouble(segundosTexto);
+						this.segundos = segundos;
+						invalido = false; // Salimos del bucle una vez se escriba el nombre correctamente
+					}
+					else { // Mensaje de error y final del bucle
+						System.out.println("Formato incorrecto. (Introduza un número del 10.00 al 99.99)");
+					}					
+				}
+				catch(InputMismatchException e) { 
+				// Capturamos el error lanzado por el programa, en caso de que se introduzca un tipo de dato distinto			
+					System.out.println("Formato incorrecto. (Introduza un número del 10.00 al 99.99)");
+					entrada.next(); // Limpiamos el búffer de la entrada para que no lo siga leyendo en el siguiente bucle
+				}
+			}			
 		}
 		
 		/**
@@ -100,10 +172,8 @@ public class Corredor {
 				    "Alba", "Julia", "Nuria", "Silvia", "Teresa", "Lorena", "Alicia", "Mónica", "Irene", "Raquel",
 				    "Eva", "Daniela", "Mercedes", "Rosario", "Inmaculada", "Lidia", "Margarita", "Rosa", "Susana", "Andrea",
 				    "Esther", "Noelia", "Verónica", "Ángela", "Consuelo", "Laura", "Paloma", "Belén", "Manuela", "Cecilia"
-				};
-						
-			for (int i = 0 ; i < 20 ; i++) { // Este bucle repite 20 veces la creación de un corredor					
-				
+				};	
+			for (int i = 0 ; i < 20 ; i++) { // Este bucle repite 20 veces la creación de un corredor									
 				Random aleatorio = new Random(); // Instanciación de la clase "Random", para generar un número aleatorio
 				
 				// El nombre del nuevo corredor será uno de los valores, aleatoriamente, del Array de Strings "nombres"
@@ -126,14 +196,13 @@ public class Corredor {
 				Corredor corredor = new Corredor(nombre, dorsal, segundos);
 				
 				Participantes.insertarCorredor(corredor); // Insertamos el corredor en el ArrayList "participantes"
-			}
-			
+			}			
 			for(Corredor c : Participantes.getParticipantes()) { // Mostramos por pantalla los corredores recién creados
 				c.mostrarDetalles();
-			}
-			
+			}			
 			System.out.println("CORREDORES CREADOS SATISFACTORIAMENTE\n");
 		}
+		
 		
 		/**
 	     * Muestra los detalles del corredor, incluyendo dorsal, nombre y tiempo.
@@ -150,32 +219,36 @@ public class Corredor {
 	     * para los corredores, permitiendo visualizar los primeros 10 o 3 corredores, ordenados
 	     * por tiempo ascendente o descendente.
 	     */
-		public void subMenuOdenacion() {			
-			boolean menu = true;
-			while(menu) {				
-				System.out.println("Escoja una opción: \n1) Los 10 primeros corredores de menor a mayor tiempo"
-						+ "\n2) Los 3 primeros corredores de menor a mayor tiempo \n3) Los 10 primeros corredores de mayor"
-						+ " a menor tiempo \n4) Los 3 primeros corredores de mayor a menor tiempo \n5) Volver atrás");
-				
-				// Bloque de código que controla la validez de la opción elegida por el usuario
-				int eleccion = 0;			
-				boolean entradaInvalida = true;			
-				while(entradaInvalida) { // Bucle que se repetirá hasta que la entrada sea válida
-					try {
-						eleccion = entrada.nextInt();	
-						if(eleccion >= 1 && eleccion <= 5) { // El número debe estar entre 1 y 5
-							entradaInvalida = false;
+		public void subMenuOdenacion() {
+			if(Participantes.getParticipantes().isEmpty()) { // Si la lista está vacía, no podremos acceder al submenú
+				System.out.println("No ha insertado ningún corredor.");
+			}
+			else {
+				boolean menu = true;
+				while(menu) {				
+					System.out.println("Escoja una opción: \n1) Los 10 primeros corredores de menor a mayor tiempo"
+							+ "\n2) Los 3 primeros corredores de menor a mayor tiempo \n3) Los 10 primeros corredores de mayor"
+							+ " a menor tiempo \n4) Los 3 primeros corredores de mayor a menor tiempo \n5) Volver atrás");
+					
+					// Bloque de código que controla la validez de la opción elegida por el usuario
+					int eleccion = 0;			
+					boolean entradaInvalida = true;			
+					while(entradaInvalida) { // Bucle que se repetirá hasta que la entrada sea válida
+						try {
+							eleccion = entrada.nextInt();	
+							if(eleccion >= 1 && eleccion <= 5) { // El número debe estar entre 1 y 5
+								entradaInvalida = false;
+							}
+							else { // Mensaje que se imprimirá si la opción no se ajusta a los requisitos
+								System.out.println("Opción inválida. El número debe estar entre 1 y 5.");
+							}					
 						}
-						else { // Mensaje que se imprimirá si la opción no se ajusta a los requisitos
-							System.out.println("Opción inválida. El número debe estar entre 1 y 5.");
-						}					
+						catch (InputMismatchException e){ // Absorvemos el error lanzado en caso de que la entrada no sea un número
+							System.out.println("Entrada inválida, por favor introduzca un número.");
+			                entrada.next(); // Limpiamos el buffer de la entrada
+						}				
 					}
-					catch (InputMismatchException e){ // Absorvemos el error lanzado en caso de que la entrada no sea un número
-						System.out.println("Entrada inválida, por favor introduzca un número.");
-		                entrada.next(); // Limpiamos el buffer de la entrada
-					}				
-				}
-				
+							
 				switch(eleccion) {
 					case 1:
 						// En este caso, ordenamos los participantes de menor a mayor tiempo
@@ -241,9 +314,11 @@ public class Corredor {
 						menu = false;
 						break;
 						
-				}			
+					}			
 						
-			} // Fin del bucle while del menú
+				} // Fin del bucle while del menú
+			
+			} // Fin del else del condicional para verificar la lista vacía
 			
 		} // Fin del método submenuOrdenacion()
 			

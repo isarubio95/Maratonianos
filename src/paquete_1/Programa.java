@@ -63,26 +63,31 @@ public class Programa {
 					instancia.crearCorredor(); //Creación del un corredor, con los parámetros elegidos por el usuario
 					break;					
 				case 2:
-					/*
-					 * El siguiente bloque de código ordena la lista que almacena todos los objetos "Corredor".
-					 * Utilizamos el método estático Collections.sort() para ordenador la lista.
-					 * Con un "Comparator" personalizado con la clase "Corredor", sobreescribos el método "compare"
-					 * de la interfaz "Comparable", con el objetivo de establecer nuestro propio criterior.
-					 * "compare" recibe dos objetos como parámetros, y luego compara los respectivos atributos que le pasamos
-					 * como parámetros al método devuelto "compare". De este modo conseguimos que:
-					 *    1. Si c1.getSegundos() es menor que c2.getSegundos(), el resultado será negativo, indicando que 
-					 *         c1 debe ir por delante de c2.
-					 *    2. Si c1.getSegundos() es mayor que c2.getSegundos(), el resultado será positivo, y por lo tanto
-					 *         c1 debe ir por detrás de c2.
-					 */
-					Collections.sort(Participantes.getParticipantes(), new Comparator<Corredor>() {
-			            @Override
-			            public int compare(Corredor c1, Corredor c2) {
-			                return Double.compare(c1.getSegundos(), c2.getSegundos());
-			            }
-			        });					
-					for(Corredor c : Participantes.getParticipantes()) {
-						c.mostrarDetalles(); // Mostramos la lista de corredores ordenada por de mejor a peor tiempo
+					if(Participantes.getParticipantes().isEmpty()) { // Si la lista está vacía, saltará un mensaje advirtiéndolo
+						System.out.println("No ha insertado ningún corredor");
+					}
+					else {
+						/*
+						 * El siguiente bloque de código ordena la lista que almacena todos los objetos "Corredor".
+						 * Utilizamos el método estático Collections.sort() para ordenador la lista.
+						 * Con un "Comparator" personalizado con la clase "Corredor", sobreescribos el método "compare"
+						 * de la interfaz "Comparable", con el objetivo de establecer nuestro propio criterior.
+						 * "compare" recibe dos objetos como parámetros, y luego compara los respectivos atributos que le pasamos
+						 * como parámetros al método devuelto "compare". De este modo conseguimos que:
+						 *    1. Si c1.getSegundos() es menor que c2.getSegundos(), el resultado será negativo, indicando que 
+						 *         c1 debe ir por delante de c2.
+						 *    2. Si c1.getSegundos() es mayor que c2.getSegundos(), el resultado será positivo, y por lo tanto
+						 *         c1 debe ir por detrás de c2.
+						 */
+						Collections.sort(Participantes.getParticipantes(), new Comparator<Corredor>() {
+				            @Override
+				            public int compare(Corredor c1, Corredor c2) {
+				                return Double.compare(c1.getSegundos(), c2.getSegundos());
+				            }
+				        });					
+						for(Corredor c : Participantes.getParticipantes()) {
+							c.mostrarDetalles(); // Mostramos la lista de corredores ordenada por de mejor a peor tiempo
+						}
 					}
 					break;					
 				case 3:
